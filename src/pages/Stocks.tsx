@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Stock, StockDetails, stockService } from '@/services/stockService';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import PriceChart from '@/components/charts/PriceChart';
+import StockGrid from '@/components/dashboard/StockGrid';
 import {
   Card,
   CardContent,
@@ -26,9 +26,9 @@ import {
   LineChart,
   BarChart3,
   History,
+  RefreshCw,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ReloadIcon } from '@radix-ui/react-icons';
 
 const Stocks: React.FC = () => {
   const { symbol } = useParams<{ symbol: string }>();
@@ -395,7 +395,7 @@ const Stocks: React.FC = () => {
           ) : (
             <div className="flex justify-center items-center min-h-[60vh]">
               <div className="text-center">
-                <ReloadIcon className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+                <RefreshCw className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
                 <h2 className="text-xl font-medium">Loading stock data...</h2>
               </div>
             </div>

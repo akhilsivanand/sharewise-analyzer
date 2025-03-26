@@ -19,7 +19,8 @@ import {
   CardTitle 
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ReloadIcon } from '@radix-ui/react-icons';
+// Change the import to get ReloadIcon from lucide-react instead
+import { RefreshCw } from 'lucide-react';
 
 interface PriceChartProps {
   symbol: string;
@@ -109,7 +110,7 @@ const PriceChart: React.FC<PriceChartProps> = ({
       <CardContent>
         {isLoading ? (
           <div className="flex justify-center items-center py-12">
-            <ReloadIcon className="h-6 w-6 animate-spin text-primary" />
+            <RefreshCw className="h-6 w-6 animate-spin text-primary" />
           </div>
         ) : (
           <ResponsiveContainer width="100%" height={height}>

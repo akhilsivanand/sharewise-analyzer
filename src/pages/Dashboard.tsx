@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Stock, stockService } from '@/services/stockService';
 import Navbar from '@/components/layout/Navbar';
@@ -8,7 +7,7 @@ import SubGrid from '@/components/dashboard/SubGrid';
 import PriceChart from '@/components/charts/PriceChart';
 import ProfitSimulator from '@/components/simulator/ProfitSimulator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { RefreshCw } from 'lucide-react';
 import { TrendingUp, DollarSign, BarChart3, Clock } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
@@ -23,7 +22,6 @@ const Dashboard: React.FC = () => {
         const data = await stockService.getAllStocks();
         setStocks(data);
         
-        // If we have stocks, set the first one as selected
         if (data.length > 0) {
           setSelectedStock(data[0].symbol);
         }
@@ -37,12 +35,10 @@ const Dashboard: React.FC = () => {
     fetchStocks();
   }, []);
   
-  // Calculate portfolio value
   const portfolioValue = stocks.reduce((total, stock) => {
     return total + (stock.quantity * stock.current_price);
   }, 0);
   
-  // Calculate day's gain/loss
   const dayChange = stocks.reduce((total, stock) => {
     return total + (stock.quantity * stock.change_amount);
   }, 0);
@@ -138,7 +134,7 @@ const Dashboard: React.FC = () => {
                   
                   {isLoading ? (
                     <div className="flex justify-center items-center py-24">
-                      <ReloadIcon className="h-8 w-8 animate-spin text-primary" />
+                      <RefreshCw className="h-8 w-8 animate-spin text-primary" />
                     </div>
                   ) : (
                     <PriceChart 
@@ -154,7 +150,7 @@ const Dashboard: React.FC = () => {
               <div className="lg:col-span-1">
                 {isLoading ? (
                   <div className="glass-card rounded-lg flex justify-center items-center" style={{ height: '456px' }}>
-                    <ReloadIcon className="h-8 w-8 animate-spin text-primary" />
+                    <RefreshCw className="h-8 w-8 animate-spin text-primary" />
                   </div>
                 ) : (
                   <ProfitSimulator stocks={stocks} />

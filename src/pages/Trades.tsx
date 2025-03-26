@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Trade, Stock, stockService } from '@/services/stockService';
 import Navbar from '@/components/layout/Navbar';
@@ -20,8 +19,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlusIcon, ArrowDownUp, ArrowUpDown, ChevronDown, Filter } from 'lucide-react';
-import { ReloadIcon } from '@radix-ui/react-icons';
+import { PlusIcon, ArrowDownUp, ArrowUpDown, ChevronDown, Filter, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu,
@@ -179,7 +177,7 @@ const Trades: React.FC = () => {
                       <TableRow>
                         <TableCell colSpan={7} className="text-center py-8">
                           <div className="flex justify-center">
-                            <ReloadIcon className="h-6 w-6 animate-spin text-primary" />
+                            <RefreshCw className="h-6 w-6 animate-spin text-primary" />
                           </div>
                         </TableCell>
                       </TableRow>

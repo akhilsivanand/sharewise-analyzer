@@ -4,7 +4,8 @@ import { Stock, stockService } from '@/services/stockService';
 import StockCard from './StockCard';
 import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ReloadIcon } from '@radix-ui/react-icons';
+// Change the import to get ReloadIcon from lucide-react instead
+import { RefreshCw } from 'lucide-react';
 
 const StockGrid: React.FC = () => {
   const [stocks, setStocks] = useState<Stock[]>([]);
@@ -39,7 +40,7 @@ const StockGrid: React.FC = () => {
     if (isLoading) {
       return (
         <div className="flex justify-center items-center py-12">
-          <ReloadIcon className="h-6 w-6 animate-spin text-primary" />
+          <RefreshCw className="h-6 w-6 animate-spin text-primary" />
         </div>
       );
     }
