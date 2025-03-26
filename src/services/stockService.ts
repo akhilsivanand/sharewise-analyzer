@@ -1,4 +1,3 @@
-
 // Mock stock data service
 interface Stock {
   id: string;

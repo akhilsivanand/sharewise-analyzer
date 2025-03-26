@@ -165,7 +165,7 @@ const Portfolio: React.FC = () => {
                           <TableRow key={stock.id}>
                             <TableCell className="font-medium">{stock.symbol}</TableCell>
                             <TableCell>
-                              <Badge variant={stock.quantity > 0 ? "success" : "destructive"}>
+                              <Badge variant={stock.quantity > 0 ? "default" : "destructive"}>
                                 {stock.quantity > 0 ? "Long" : "Short"}
                               </Badge>
                             </TableCell>
@@ -174,8 +174,8 @@ const Portfolio: React.FC = () => {
                             <TableCell className="font-medium">
                               ${(stock.current_price * Math.abs(stock.quantity)).toFixed(2)}
                             </TableCell>
-                            <TableCell className={getTickerPerformanceColor(stock.percent_change)}>
-                              {stock.percent_change > 0 ? '+' : ''}{stock.percent_change}%
+                            <TableCell className={getTickerPerformanceColor(stock.change_percent)}>
+                              {stock.change_percent > 0 ? '+' : ''}{stock.change_percent}%
                             </TableCell>
                           </TableRow>
                         ))}
@@ -218,7 +218,7 @@ const Portfolio: React.FC = () => {
                               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                           </Pie>
-                          <Tooltip formatter={(value) => `$${value.toFixed(2)}`} />
+                          <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
                           <Legend />
                         </PieChart>
                       </ResponsiveContainer>

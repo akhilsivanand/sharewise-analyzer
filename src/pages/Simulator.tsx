@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +14,7 @@ import {
   Tooltip, Legend, ResponsiveContainer, AreaChart, Area 
 } from 'recharts';
 import { DollarSign, Calculator, TrendingUp, ArrowUpRight, Clock, BarChart3 } from 'lucide-react';
+import { Stock, stockService } from '@/services/stockService';
 
 // Mock historical price data
 const historicalData = [
@@ -63,6 +64,20 @@ const Simulator: React.FC = () => {
   const [sellPrice, setSellPrice] = useState(220);
   const [scenarioType, setScenarioType] = useState('neutral');
   const [holdingPeriod, setHoldingPeriod] = useState(180); // in days
+  const [stocks, setStocks] = useState<Stock[]>([]);
+  
+  useEffect(() => {
+    const fetchStocks = async () => {
+      try {
+        const data = await stockService.getAllStocks();
+        setStocks(data);
+      } catch (error) {
+        console.error('Failed to fetch stocks:', error);
+      }
+    };
+    
+    fetchStocks();
+  }, []);
   
   // Handle quantity change from slider
   const handleQuantityChange = (value: number[]) => {
@@ -363,7 +378,7 @@ const Simulator: React.FC = () => {
                 <CardDescription>Visualize potential outcomes with detailed parameters</CardDescription>
               </CardHeader>
               <CardContent>
-                <ProfitSimulator />
+                <ProfitSimulator stocks={stocks} />
               </CardContent>
             </Card>
             
