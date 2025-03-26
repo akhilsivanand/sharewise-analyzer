@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -13,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from '@/components/ui/dialog';
 import { Plus, Search, Edit, Trash, UserPlus, Check, X, User } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -24,6 +24,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 
 // Mock user data
 const mockUsers = [
@@ -75,7 +77,7 @@ const mockUsers = [
 ];
 
 // Role permissions
-const rolePermissions = {
+const initialRolePermissions = {
   admin: [
     { name: 'View Dashboard', allowed: true },
     { name: 'Manage Trades', allowed: true },
@@ -110,6 +112,11 @@ const Users: React.FC = () => {
   const [users, setUsers] = useState(mockUsers);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [rolePermissions, setRolePermissions] = useState(initialRolePermissions);
+  const [editingRole, setEditingRole] = useState<string | null>(null);
+  const [tempPermissions, setTempPermissions] = useState<typeof initialRolePermissions>();
+  const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false);
+  const { toast } = useToast();
   
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -140,6 +147,32 @@ const Users: React.FC = () => {
     return status === 'active' 
       ? "bg-success/15 text-success border-success/30" 
       : "bg-destructive/15 text-destructive border-destructive/30";
+  };
+  
+  const handleEditPermissions = () => {
+    setTempPermissions(JSON.parse(JSON.stringify(rolePermissions)));
+    setIsPermissionDialogOpen(true);
+  };
+
+  const handleTogglePermission = (role: string, permissionIndex: number) => {
+    if (!tempPermissions) return;
+    
+    setTempPermissions(prev => {
+      if (!prev) return prev;
+      const newPermissions = JSON.parse(JSON.stringify(prev));
+      newPermissions[role][permissionIndex].allowed = !newPermissions[role][permissionIndex].allowed;
+      return newPermissions;
+    });
+  };
+
+  const handleSavePermissions = () => {
+    setRolePermissions(tempPermissions!);
+    setIsPermissionDialogOpen(false);
+    
+    toast({
+      title: "Permissions Updated",
+      description: "Role permissions have been successfully updated.",
+    });
   };
   
   return (
@@ -353,9 +386,48 @@ const Users: React.FC = () => {
                       </div>
                     ))}
                     
-                    <Button variant="outline" className="w-full mt-2">
+                    <Button variant="outline" className="w-full mt-2" onClick={handleEditPermissions}>
                       Edit Permissions
                     </Button>
+
+                    <Dialog open={isPermissionDialogOpen} onOpenChange={setIsPermissionDialogOpen}>
+                      <DialogContent className="max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Edit Role Permissions</DialogTitle>
+                          <DialogDescription>
+                            Customize access permissions for each role
+                          </DialogDescription>
+                        </DialogHeader>
+                        
+                        <div className="space-y-6 py-4">
+                          {tempPermissions && Object.entries(tempPermissions).map(([role, permissions]) => (
+                            <div key={role} className="space-y-3 border rounded-md p-4">
+                              <h3 className="text-base font-medium capitalize">{role}</h3>
+                              <div className="space-y-2">
+                                {permissions.map((permission, index) => (
+                                  <div key={index} className="flex items-center justify-between">
+                                    <span className="text-sm">{permission.name}</span>
+                                    <Switch 
+                                      checked={permission.allowed}
+                                      onCheckedChange={() => handleTogglePermission(role, index)}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        <DialogFooter>
+                          <Button variant="outline" onClick={() => setIsPermissionDialogOpen(false)}>
+                            Cancel
+                          </Button>
+                          <Button onClick={handleSavePermissions}>
+                            Save Changes
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </CardContent>
               </Card>
